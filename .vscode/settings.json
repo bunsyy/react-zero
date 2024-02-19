@@ -1,4 +1,19 @@
 {
-    "jest.auroRun": false,
-    "tailwind-fold.foldLengthThreshold": 10
+    "tailwind-fold.foldLengthThreshold": 10,
+    "editor.fontSize": 14,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "typescript.preferences.importModuleSpecifier": "shortest",
+    "prettier.configPath": "prettier.config.js",
+    "jest.autoRun": {},
+    "tailwindCSS.experimental.classRegex": [
+        [
+            "cva\\(([^)]*)\\)",
+            "\"'`.*?[\"'`]"
+        ],
+        [
+            "cx\\(([^)]*)\\)",
+            "(?:'|\"|`)([^']*)(?:'|\"|`)"
+        ]
+    ],
 }
