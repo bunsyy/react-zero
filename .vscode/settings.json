@@ -1,0 +1,4 @@
+{
+    "jest.auroRun": false,
+    "tailwind-fold.foldLengthThreshold": 10
+}
