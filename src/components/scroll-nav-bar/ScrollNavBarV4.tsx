@@ -11,7 +11,6 @@ import { cn } from "../../libs/cn";
 const ScrollNavBarV4: React.FC = () => {
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
   const [mainNavBarVisible, setMainNavBarVisible] = useState(true);
-  const [secondaryNavBarSticky, setSecondaryNavBarSticky] = useState(false);
 
   const handleScroll = () => {
     const currentScrollPosition = window.scrollY;
@@ -47,8 +46,8 @@ const ScrollNavBarV4: React.FC = () => {
             transition={{ duration: 0.15 }}
             className={cn(
               "fixed top-0 z-50 w-full bg-white",
-              "[--opacity-from:0] [--y-from:-10px]",
-              "[--opacity-to:1] [--y-to:0px]"
+              "[--y-from:-10px]",
+              "[--y-to:0px]"
             )}
           >
             MAIN NAV BAR
