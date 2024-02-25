@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-import { cn } from "../libs/cn";
+import { cn } from "../../../libs/cn";
 
 const ScrollNavBarSubV1 = () => {
   const [scaleFactor, setScaleFactor] = useState(1); // Initialize with 0

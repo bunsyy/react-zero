@@ -35,8 +35,11 @@
 
     --radius: 0.5rem;
 
-    --opacity-from: 0;
-    --opacity-to: 1;
+    --nav-opacity-from: 0;
+    --nav-opacity-to: 1;
+
+    --nav-y-from: -14px;
+    --nav-y-to: 0px;
   }
 
   .dark {

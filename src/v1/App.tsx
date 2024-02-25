@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-import LongContent from "./components/long-content";
-import useNavBar from "./hooks/useNavBar";
-import { cn } from "./libs/cn";
+import LongContent from "../components/long-content";
+import { cn } from "../libs/cn";
+import useNavBar from "./useNavBar";
 
 const Header = () => {
   const { showMainNav, showMainNavAsFixed } = useNavBar();
