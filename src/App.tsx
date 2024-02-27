@@ -40,6 +40,16 @@ const Header = () => {
           </AnimatePresence>
         </div>
       </header>
+      <div className="flex h-12 items-center bg-gray-100">MEMBERSHIP</div>
+    </div>
+  );
+};
+
+const MainBody = () => {
+  return (
+    <div className="flex h-[calc(100vh-50px)] bg-green-400">
+      <aside className="fixed left-0 top-0 h-full">ASIDE</aside>
+      <main>MAIN BODY</main>
     </div>
   );
 };
@@ -49,7 +59,6 @@ const MainContent = () => {
 
   return (
     <div>
-      <div className="flex h-12 items-center bg-gray-100">MEMBERSHIP</div>
       <motion.div
         className={cn(
           "flex h-12 items-center justify-between bg-white",
@@ -63,9 +72,14 @@ const MainContent = () => {
         <div>NEW RELEASE</div>
         <div>FILTERS</div>
       </motion.div>
-      <LongContent />
+      {/* <LongContent className="flex bg-cyan-200" /> */}
+      <MainBody />
     </div>
   );
+};
+
+const Footer = () => {
+  return <div className="h-24 bg-blue-300">FOOTER</div>;
 };
 
 function App() {
@@ -73,6 +87,7 @@ function App() {
     <div>
       <Header />
       <MainContent />
+      <Footer />
     </div>
   );
 }
