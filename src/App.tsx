@@ -1,7 +1,9 @@
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import LongContent from "./components/long-content";
 import useNavBar from "./hooks/useNavBar";
+import { useRect } from "./hooks/useRect";
 import { cn } from "./libs/cn";
 
 const Header = () => {
@@ -45,21 +47,54 @@ const Header = () => {
   );
 };
 
-const MainBody = () => {
+const MainBody = ({ asideTop }: { asideTop?: number }) => {
+  console.log("🚀 ~ MainBody ~ asideTop:", asideTop);
+  const { showMainNav, showMainNavAsFixed } = useNavBar();
+
   return (
-    <div className="flex h-[calc(100vh-50px)] bg-green-400">
-      <aside className="fixed left-0 top-0 h-full">ASIDE</aside>
+    <div
+      className={cn(
+        "flex h-[calc(100vh-50px)] bg-green-400",
+        !showMainNav && "bg-yellow-300",
+        showMainNavAsFixed && "bg-pink-300"
+      )}
+    >
+      <aside
+        className={cn(
+          "flex-0 h-full w-28 bg-cyan-300",
+          showMainNavAsFixed && "pt-40"
+        )}
+      >
+        ASIDE
+      </aside>
       <main>MAIN BODY</main>
     </div>
   );
 };
 
+// const calculateTopPosition = (elementRef: MutableRefObject<null>) => {
+//   const rect = elementRef.current.getBoundingClientRect();
+//   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+//   return rect.top + scrollTop;
+// };
+
 const MainContent = () => {
   const { isNewReleaseSticky } = useNavBar();
+  const [rect, newReleaseRef] = useRect("scroll");
+  const [asideTop, setAsideTop] = useState(rect?.bottom);
+  // console.log("🚀 ~ MainContent ~ newReleaseRef:", {
+  //   rect: rect,
+  //   asideTop: rect?.bottom,
+  // });
+
+  useEffect(() => {
+    setAsideTop(rect?.bottom);
+  }, [rect?.bottom]);
 
   return (
     <div>
       <motion.div
+        ref={newReleaseRef}
         className={cn(
           "flex h-12 items-center justify-between bg-white",
           "sticky top-0"
@@ -73,7 +108,7 @@ const MainContent = () => {
         <div>FILTERS</div>
       </motion.div>
       {/* <LongContent className="flex bg-cyan-200" /> */}
-      <MainBody />
+      <MainBody asideTop={asideTop} />
     </div>
   );
 };
