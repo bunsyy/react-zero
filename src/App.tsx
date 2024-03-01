@@ -1,11 +1,14 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
+import { atom, useAtom } from "jotai";
 
+import { footerVisibleHeightAtom } from "./atoms/footerAtom";
 import LongContent from "./components/long-content";
 import LoremIpsum from "./components/long-content/lorem-ipsum";
 import { useInViewport } from "./hooks/useInViewPort";
 import useNavBar from "./hooks/useNavBar";
 import { useRect } from "./hooks/useRect";
+import { LayoutProvider } from "./LayoutProvider";
 import { cn } from "./libs/cn";
 
 const Header = () => {
@@ -50,8 +53,10 @@ const Header = () => {
 };
 
 const MainBody = ({ asideTop }: { asideTop?: number }) => {
-  console.log("🚀 ~ MainBody ~ asideTop:", asideTop);
+  // console.log("🚀 ~ MainBody ~ asideTop:", asideTop);
   const { showMainNav, showMainNavAsFixed } = useNavBar();
+  const [footerVisibleHeight] = useAtom(footerVisibleHeightAtom);
+  console.log("🚀 ~ MainBody ~ footerAtom:", footerVisibleHeight);
 
   // return (
   //   <div
@@ -73,6 +78,8 @@ const MainBody = ({ asideTop }: { asideTop?: number }) => {
   //   </div>
   // );
 
+  const asideHeight = asideTop + footerVisibleHeight + 1;
+
   return (
     <div
       className={cn(
@@ -92,8 +99,8 @@ const MainBody = ({ asideTop }: { asideTop?: number }) => {
           showMainNavAsFixed && "bg-orange-300"
         )}
         style={{
-          height: `calc(100vh - ${asideTop}px)`,
-          maxHeight: `calc(100vh - ${asideTop}px)`,
+          height: `calc(100vh - ${asideHeight}px)`,
+          maxHeight: `calc(100vh - ${asideHeight}px)`,
           // top: asideTop && asideTop >= 48 ? asideTop : 48,
           top: asideTop && asideTop > 48 ? asideTop : 48,
         }}
@@ -149,9 +156,49 @@ const MainContent = () => {
 };
 
 const Footer = () => {
-  const footerRef = useRef(null);
+  const [_, setFooterAtom] = useAtom(footerVisibleHeightAtom);
+  const [footerRect, footerRef] = useRect("scroll");
   const isFooterInView = useInView(footerRef);
-  console.log("🚀 ~ Footer ~ isFooterInView:", isFooterInView);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [prevFooterVisibleHeight, setPrevFooterVisibleHeight] = useState(0);
+  const { isScrollingDown } = useNavBar();
+
+  const scrollMaxY =
+    document.documentElement.scrollHeight -
+    document.documentElement.clientHeight;
+
+  useEffect(() => {
+    setFooterAtom(
+      isFooterInView
+        ? Math.ceil(window.scrollY - (scrollMaxY - footerRect?.height))
+        : 0
+    );
+  }, [isFooterInView, scrollMaxY, footerRect, setFooterAtom]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const curScrollPos = window.scrollY;
+
+      const curFooterVisibleHeight = isFooterInView
+        ? prevScrollPos - (scrollMaxY - footerRect?.height)
+        : 0;
+
+      if (Math.ceil(curScrollPos) === scrollMaxY) {
+        setFooterAtom(96);
+      } else {
+        setFooterAtom(
+          isFooterInView
+            ? Math.ceil(prevScrollPos - (scrollMaxY - footerRect?.height))
+            : 0
+        );
+      }
+
+      setPrevScrollPos(curScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  });
 
   return (
     <div ref={footerRef} className="h-24 bg-blue-300">

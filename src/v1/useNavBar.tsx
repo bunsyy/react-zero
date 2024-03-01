@@ -4,6 +4,7 @@ const useNavBar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [showMainNav, setShowMainNav] = useState(true);
   const [showMainNavAsFixed, setShowMainNavAsFixed] = useState(false);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +17,12 @@ const useNavBar = () => {
       const showMainNavAsFixedThreshold = 80;
       const isUserAtOrBelowCertainPixel =
         curScrollPos <= showMainNavAsFixedThreshold;
+
+      if (isScrollingDown) {
+        setIsScrollingDown(true);
+      } else {
+        setIsScrollingDown(false);
+      }
 
       if (
         !isScrollingDown &&
@@ -44,6 +51,7 @@ const useNavBar = () => {
   });
 
   return {
+    isScrollingDown,
     curScrollPos: prevScrollPos,
     showMainNav,
     showMainNavAsFixed,
