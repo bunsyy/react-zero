@@ -1,7 +1,9 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 
 import LongContent from "./components/long-content";
+import LoremIpsum from "./components/long-content/lorem-ipsum";
+import { useInViewport } from "./hooks/useInViewPort";
 import useNavBar from "./hooks/useNavBar";
 import { useRect } from "./hooks/useRect";
 import { cn } from "./libs/cn";
@@ -51,23 +53,56 @@ const MainBody = ({ asideTop }: { asideTop?: number }) => {
   console.log("🚀 ~ MainBody ~ asideTop:", asideTop);
   const { showMainNav, showMainNavAsFixed } = useNavBar();
 
+  // return (
+  //   <div
+  //     className={cn(
+  //       "flex h-[calc(100vh-50px)] bg-green-400",
+  //       !showMainNav && "bg-yellow-300",
+  //       showMainNavAsFixed && "bg-pink-300"
+  //     )}
+  //   >
+  //     <aside
+  //       className={cn(
+  //         "flex-0 h-full w-28 bg-cyan-300",
+  //         showMainNavAsFixed && "pt-40"
+  //       )}
+  //     >
+  //       ASIDE
+  //     </aside>
+  //     <main>MAIN BODY</main>
+  //   </div>
+  // );
+
   return (
     <div
       className={cn(
-        "flex h-[calc(100vh-50px)] bg-green-400",
-        !showMainNav && "bg-yellow-300",
-        showMainNavAsFixed && "bg-pink-300"
+        "flex bg-green-400"
+        // `max-h-[calc(100vh-${asideTop}px)]`
       )}
+      // style={{
+      //   height: `calc(100vh-${asideTop}px)`,
+      //   maxHeight: `calc(100vh-${asideTop}px)`,
+      // }}
     >
       <aside
         className={cn(
-          "flex-0 h-full w-28 bg-cyan-300",
-          showMainNavAsFixed && "pt-40"
+          "flex-0 sticky h-full w-48 overflow-y-scroll",
+          showMainNav && "bg-violet-300",
+          !showMainNav && "bg-sky-300",
+          showMainNavAsFixed && "bg-orange-300"
         )}
+        style={{
+          height: `calc(100vh - ${asideTop}px)`,
+          maxHeight: `calc(100vh - ${asideTop}px)`,
+          // top: asideTop && asideTop >= 48 ? asideTop : 48,
+          top: asideTop && asideTop > 48 ? asideTop : 48,
+        }}
       >
-        ASIDE
+        <LoremIpsum className="bg-slate-300" />
       </aside>
-      <main>MAIN BODY</main>
+      <main className="w-full bg-amber-300">
+        <LoremIpsum />
+      </main>
     </div>
   );
 };
@@ -114,12 +149,20 @@ const MainContent = () => {
 };
 
 const Footer = () => {
-  return <div className="h-24 bg-blue-300">FOOTER</div>;
+  const footerRef = useRef(null);
+  const isFooterInView = useInView(footerRef);
+  console.log("🚀 ~ Footer ~ isFooterInView:", isFooterInView);
+
+  return (
+    <div ref={footerRef} className="h-24 bg-blue-300">
+      FOOTER
+    </div>
+  );
 };
 
 function App() {
   return (
-    <div>
+    <div className="scroll-smooth">
       <Header />
       <MainContent />
       <Footer />
